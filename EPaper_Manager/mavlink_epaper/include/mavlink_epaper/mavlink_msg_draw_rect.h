@@ -4,24 +4,28 @@
 
 typedef struct __mavlink_draw_rect_t
 {
+ uint16_t masteraddress; ///< Master's address
+ uint16_t slaveraddress; ///< Slaver's address
  uint16_t xpos; ///< X position
  uint16_t ypos; ///< Y position
  uint16_t height; ///< rectangle height
  uint16_t width; ///< rectangle width
 } mavlink_draw_rect_t;
 
-#define MAVLINK_MSG_ID_DRAW_RECT_LEN 8
-#define MAVLINK_MSG_ID_7_LEN 8
+#define MAVLINK_MSG_ID_DRAW_RECT_LEN 12
+#define MAVLINK_MSG_ID_7_LEN 12
 
 
 
 #define MAVLINK_MESSAGE_INFO_DRAW_RECT { \
 	"DRAW_RECT", \
-	4, \
-	{  { "xpos", NULL, MAVLINK_TYPE_UINT16_T, 0, 0, offsetof(mavlink_draw_rect_t, xpos) }, \
-         { "ypos", NULL, MAVLINK_TYPE_UINT16_T, 0, 2, offsetof(mavlink_draw_rect_t, ypos) }, \
-         { "height", NULL, MAVLINK_TYPE_UINT16_T, 0, 4, offsetof(mavlink_draw_rect_t, height) }, \
-         { "width", NULL, MAVLINK_TYPE_UINT16_T, 0, 6, offsetof(mavlink_draw_rect_t, width) }, \
+	6, \
+	{  { "masteraddress", NULL, MAVLINK_TYPE_UINT16_T, 0, 0, offsetof(mavlink_draw_rect_t, masteraddress) }, \
+         { "slaveraddress", NULL, MAVLINK_TYPE_UINT16_T, 0, 2, offsetof(mavlink_draw_rect_t, slaveraddress) }, \
+         { "xpos", NULL, MAVLINK_TYPE_UINT16_T, 0, 4, offsetof(mavlink_draw_rect_t, xpos) }, \
+         { "ypos", NULL, MAVLINK_TYPE_UINT16_T, 0, 6, offsetof(mavlink_draw_rect_t, ypos) }, \
+         { "height", NULL, MAVLINK_TYPE_UINT16_T, 0, 8, offsetof(mavlink_draw_rect_t, height) }, \
+         { "width", NULL, MAVLINK_TYPE_UINT16_T, 0, 10, offsetof(mavlink_draw_rect_t, width) }, \
          } \
 }
 
@@ -32,6 +36,8 @@ typedef struct __mavlink_draw_rect_t
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param msg The MAVLink message to compress the data into
  *
+ * @param masteraddress Master's address
+ * @param slaveraddress Slaver's address
  * @param xpos X position
  * @param ypos Y position
  * @param height rectangle height
@@ -39,28 +45,32 @@ typedef struct __mavlink_draw_rect_t
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_draw_rect_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-						       uint16_t xpos, uint16_t ypos, uint16_t height, uint16_t width)
+						       uint16_t masteraddress, uint16_t slaveraddress, uint16_t xpos, uint16_t ypos, uint16_t height, uint16_t width)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[8];
-	_mav_put_uint16_t(buf, 0, xpos);
-	_mav_put_uint16_t(buf, 2, ypos);
-	_mav_put_uint16_t(buf, 4, height);
-	_mav_put_uint16_t(buf, 6, width);
+	char buf[12];
+	_mav_put_uint16_t(buf, 0, masteraddress);
+	_mav_put_uint16_t(buf, 2, slaveraddress);
+	_mav_put_uint16_t(buf, 4, xpos);
+	_mav_put_uint16_t(buf, 6, ypos);
+	_mav_put_uint16_t(buf, 8, height);
+	_mav_put_uint16_t(buf, 10, width);
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, 8);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, 12);
 #else
 	mavlink_draw_rect_t packet;
+	packet.masteraddress = masteraddress;
+	packet.slaveraddress = slaveraddress;
 	packet.xpos = xpos;
 	packet.ypos = ypos;
 	packet.height = height;
 	packet.width = width;
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, 8);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, 12);
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_DRAW_RECT;
-	return mavlink_finalize_message(msg, system_id, component_id, 8, 176);
+	return mavlink_finalize_message(msg, system_id, component_id, 12, 223);
 }
 
 /**
@@ -69,6 +79,8 @@ static inline uint16_t mavlink_msg_draw_rect_pack(uint8_t system_id, uint8_t com
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param chan The MAVLink channel this message was sent over
  * @param msg The MAVLink message to compress the data into
+ * @param masteraddress Master's address
+ * @param slaveraddress Slaver's address
  * @param xpos X position
  * @param ypos Y position
  * @param height rectangle height
@@ -77,28 +89,32 @@ static inline uint16_t mavlink_msg_draw_rect_pack(uint8_t system_id, uint8_t com
  */
 static inline uint16_t mavlink_msg_draw_rect_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
 							   mavlink_message_t* msg,
-						           uint16_t xpos,uint16_t ypos,uint16_t height,uint16_t width)
+						           uint16_t masteraddress,uint16_t slaveraddress,uint16_t xpos,uint16_t ypos,uint16_t height,uint16_t width)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[8];
-	_mav_put_uint16_t(buf, 0, xpos);
-	_mav_put_uint16_t(buf, 2, ypos);
-	_mav_put_uint16_t(buf, 4, height);
-	_mav_put_uint16_t(buf, 6, width);
+	char buf[12];
+	_mav_put_uint16_t(buf, 0, masteraddress);
+	_mav_put_uint16_t(buf, 2, slaveraddress);
+	_mav_put_uint16_t(buf, 4, xpos);
+	_mav_put_uint16_t(buf, 6, ypos);
+	_mav_put_uint16_t(buf, 8, height);
+	_mav_put_uint16_t(buf, 10, width);
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, 8);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, 12);
 #else
 	mavlink_draw_rect_t packet;
+	packet.masteraddress = masteraddress;
+	packet.slaveraddress = slaveraddress;
 	packet.xpos = xpos;
 	packet.ypos = ypos;
 	packet.height = height;
 	packet.width = width;
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, 8);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, 12);
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_DRAW_RECT;
-	return mavlink_finalize_message_chan(msg, system_id, component_id, chan, 8, 176);
+	return mavlink_finalize_message_chan(msg, system_id, component_id, chan, 12, 223);
 }
 
 /**
@@ -111,13 +127,15 @@ static inline uint16_t mavlink_msg_draw_rect_pack_chan(uint8_t system_id, uint8_
  */
 static inline uint16_t mavlink_msg_draw_rect_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_draw_rect_t* draw_rect)
 {
-	return mavlink_msg_draw_rect_pack(system_id, component_id, msg, draw_rect->xpos, draw_rect->ypos, draw_rect->height, draw_rect->width);
+	return mavlink_msg_draw_rect_pack(system_id, component_id, msg, draw_rect->masteraddress, draw_rect->slaveraddress, draw_rect->xpos, draw_rect->ypos, draw_rect->height, draw_rect->width);
 }
 
 /**
  * @brief Send a draw_rect message
  * @param chan MAVLink channel to send the message
  *
+ * @param masteraddress Master's address
+ * @param slaveraddress Slaver's address
  * @param xpos X position
  * @param ypos Y position
  * @param height rectangle height
@@ -125,24 +143,28 @@ static inline uint16_t mavlink_msg_draw_rect_encode(uint8_t system_id, uint8_t c
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
-static inline void mavlink_msg_draw_rect_send(mavlink_channel_t chan, uint16_t xpos, uint16_t ypos, uint16_t height, uint16_t width)
+static inline void mavlink_msg_draw_rect_send(mavlink_channel_t chan, uint16_t masteraddress, uint16_t slaveraddress, uint16_t xpos, uint16_t ypos, uint16_t height, uint16_t width)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[8];
-	_mav_put_uint16_t(buf, 0, xpos);
-	_mav_put_uint16_t(buf, 2, ypos);
-	_mav_put_uint16_t(buf, 4, height);
-	_mav_put_uint16_t(buf, 6, width);
+	char buf[12];
+	_mav_put_uint16_t(buf, 0, masteraddress);
+	_mav_put_uint16_t(buf, 2, slaveraddress);
+	_mav_put_uint16_t(buf, 4, xpos);
+	_mav_put_uint16_t(buf, 6, ypos);
+	_mav_put_uint16_t(buf, 8, height);
+	_mav_put_uint16_t(buf, 10, width);
 
-	_mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_DRAW_RECT, buf, 8, 176);
+	_mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_DRAW_RECT, buf, 12, 223);
 #else
 	mavlink_draw_rect_t packet;
+	packet.masteraddress = masteraddress;
+	packet.slaveraddress = slaveraddress;
 	packet.xpos = xpos;
 	packet.ypos = ypos;
 	packet.height = height;
 	packet.width = width;
 
-	_mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_DRAW_RECT, (const char *)&packet, 8, 176);
+	_mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_DRAW_RECT, (const char *)&packet, 12, 223);
 #endif
 }
 
@@ -152,13 +174,33 @@ static inline void mavlink_msg_draw_rect_send(mavlink_channel_t chan, uint16_t x
 
 
 /**
+ * @brief Get field masteraddress from draw_rect message
+ *
+ * @return Master's address
+ */
+static inline uint16_t mavlink_msg_draw_rect_get_masteraddress(const mavlink_message_t* msg)
+{
+	return _MAV_RETURN_uint16_t(msg,  0);
+}
+
+/**
+ * @brief Get field slaveraddress from draw_rect message
+ *
+ * @return Slaver's address
+ */
+static inline uint16_t mavlink_msg_draw_rect_get_slaveraddress(const mavlink_message_t* msg)
+{
+	return _MAV_RETURN_uint16_t(msg,  2);
+}
+
+/**
  * @brief Get field xpos from draw_rect message
  *
  * @return X position
  */
 static inline uint16_t mavlink_msg_draw_rect_get_xpos(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint16_t(msg,  0);
+	return _MAV_RETURN_uint16_t(msg,  4);
 }
 
 /**
@@ -168,7 +210,7 @@ static inline uint16_t mavlink_msg_draw_rect_get_xpos(const mavlink_message_t* m
  */
 static inline uint16_t mavlink_msg_draw_rect_get_ypos(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint16_t(msg,  2);
+	return _MAV_RETURN_uint16_t(msg,  6);
 }
 
 /**
@@ -178,7 +220,7 @@ static inline uint16_t mavlink_msg_draw_rect_get_ypos(const mavlink_message_t* m
  */
 static inline uint16_t mavlink_msg_draw_rect_get_height(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint16_t(msg,  4);
+	return _MAV_RETURN_uint16_t(msg,  8);
 }
 
 /**
@@ -188,7 +230,7 @@ static inline uint16_t mavlink_msg_draw_rect_get_height(const mavlink_message_t*
  */
 static inline uint16_t mavlink_msg_draw_rect_get_width(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint16_t(msg,  6);
+	return _MAV_RETURN_uint16_t(msg,  10);
 }
 
 /**
@@ -200,11 +242,13 @@ static inline uint16_t mavlink_msg_draw_rect_get_width(const mavlink_message_t* 
 static inline void mavlink_msg_draw_rect_decode(const mavlink_message_t* msg, mavlink_draw_rect_t* draw_rect)
 {
 #if MAVLINK_NEED_BYTE_SWAP
+	draw_rect->masteraddress = mavlink_msg_draw_rect_get_masteraddress(msg);
+	draw_rect->slaveraddress = mavlink_msg_draw_rect_get_slaveraddress(msg);
 	draw_rect->xpos = mavlink_msg_draw_rect_get_xpos(msg);
 	draw_rect->ypos = mavlink_msg_draw_rect_get_ypos(msg);
 	draw_rect->height = mavlink_msg_draw_rect_get_height(msg);
 	draw_rect->width = mavlink_msg_draw_rect_get_width(msg);
 #else
-	memcpy(draw_rect, _MAV_PAYLOAD(msg), 8);
+	memcpy(draw_rect, _MAV_PAYLOAD(msg), 12);
 #endif
 }

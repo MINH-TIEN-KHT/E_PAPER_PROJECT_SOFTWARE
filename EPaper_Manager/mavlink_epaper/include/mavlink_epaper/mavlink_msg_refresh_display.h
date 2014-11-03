@@ -4,18 +4,20 @@
 
 typedef struct __mavlink_refresh_display_t
 {
- uint8_t dummy; ///< dummy data
+ uint16_t masteraddress; ///< Master's address
+ uint16_t slaveraddress; ///< Slaver's address
 } mavlink_refresh_display_t;
 
-#define MAVLINK_MSG_ID_REFRESH_DISPLAY_LEN 1
-#define MAVLINK_MSG_ID_10_LEN 1
+#define MAVLINK_MSG_ID_REFRESH_DISPLAY_LEN 4
+#define MAVLINK_MSG_ID_10_LEN 4
 
 
 
 #define MAVLINK_MESSAGE_INFO_REFRESH_DISPLAY { \
 	"REFRESH_DISPLAY", \
-	1, \
-	{  { "dummy", NULL, MAVLINK_TYPE_UINT8_T, 0, 0, offsetof(mavlink_refresh_display_t, dummy) }, \
+	2, \
+	{  { "masteraddress", NULL, MAVLINK_TYPE_UINT16_T, 0, 0, offsetof(mavlink_refresh_display_t, masteraddress) }, \
+         { "slaveraddress", NULL, MAVLINK_TYPE_UINT16_T, 0, 2, offsetof(mavlink_refresh_display_t, slaveraddress) }, \
          } \
 }
 
@@ -26,26 +28,29 @@ typedef struct __mavlink_refresh_display_t
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param msg The MAVLink message to compress the data into
  *
- * @param dummy dummy data
+ * @param masteraddress Master's address
+ * @param slaveraddress Slaver's address
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_refresh_display_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-						       uint8_t dummy)
+						       uint16_t masteraddress, uint16_t slaveraddress)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[1];
-	_mav_put_uint8_t(buf, 0, dummy);
+	char buf[4];
+	_mav_put_uint16_t(buf, 0, masteraddress);
+	_mav_put_uint16_t(buf, 2, slaveraddress);
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, 1);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, 4);
 #else
 	mavlink_refresh_display_t packet;
-	packet.dummy = dummy;
+	packet.masteraddress = masteraddress;
+	packet.slaveraddress = slaveraddress;
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, 1);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, 4);
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_REFRESH_DISPLAY;
-	return mavlink_finalize_message(msg, system_id, component_id, 1, 129);
+	return mavlink_finalize_message(msg, system_id, component_id, 4, 222);
 }
 
 /**
@@ -54,27 +59,30 @@ static inline uint16_t mavlink_msg_refresh_display_pack(uint8_t system_id, uint8
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param chan The MAVLink channel this message was sent over
  * @param msg The MAVLink message to compress the data into
- * @param dummy dummy data
+ * @param masteraddress Master's address
+ * @param slaveraddress Slaver's address
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_refresh_display_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
 							   mavlink_message_t* msg,
-						           uint8_t dummy)
+						           uint16_t masteraddress,uint16_t slaveraddress)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[1];
-	_mav_put_uint8_t(buf, 0, dummy);
+	char buf[4];
+	_mav_put_uint16_t(buf, 0, masteraddress);
+	_mav_put_uint16_t(buf, 2, slaveraddress);
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, 1);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, 4);
 #else
 	mavlink_refresh_display_t packet;
-	packet.dummy = dummy;
+	packet.masteraddress = masteraddress;
+	packet.slaveraddress = slaveraddress;
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, 1);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, 4);
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_REFRESH_DISPLAY;
-	return mavlink_finalize_message_chan(msg, system_id, component_id, chan, 1, 129);
+	return mavlink_finalize_message_chan(msg, system_id, component_id, chan, 4, 222);
 }
 
 /**
@@ -87,29 +95,32 @@ static inline uint16_t mavlink_msg_refresh_display_pack_chan(uint8_t system_id, 
  */
 static inline uint16_t mavlink_msg_refresh_display_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_refresh_display_t* refresh_display)
 {
-	return mavlink_msg_refresh_display_pack(system_id, component_id, msg, refresh_display->dummy);
+	return mavlink_msg_refresh_display_pack(system_id, component_id, msg, refresh_display->masteraddress, refresh_display->slaveraddress);
 }
 
 /**
  * @brief Send a refresh_display message
  * @param chan MAVLink channel to send the message
  *
- * @param dummy dummy data
+ * @param masteraddress Master's address
+ * @param slaveraddress Slaver's address
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
-static inline void mavlink_msg_refresh_display_send(mavlink_channel_t chan, uint8_t dummy)
+static inline void mavlink_msg_refresh_display_send(mavlink_channel_t chan, uint16_t masteraddress, uint16_t slaveraddress)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[1];
-	_mav_put_uint8_t(buf, 0, dummy);
+	char buf[4];
+	_mav_put_uint16_t(buf, 0, masteraddress);
+	_mav_put_uint16_t(buf, 2, slaveraddress);
 
-	_mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_REFRESH_DISPLAY, buf, 1, 129);
+	_mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_REFRESH_DISPLAY, buf, 4, 222);
 #else
 	mavlink_refresh_display_t packet;
-	packet.dummy = dummy;
+	packet.masteraddress = masteraddress;
+	packet.slaveraddress = slaveraddress;
 
-	_mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_REFRESH_DISPLAY, (const char *)&packet, 1, 129);
+	_mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_REFRESH_DISPLAY, (const char *)&packet, 4, 222);
 #endif
 }
 
@@ -119,13 +130,23 @@ static inline void mavlink_msg_refresh_display_send(mavlink_channel_t chan, uint
 
 
 /**
- * @brief Get field dummy from refresh_display message
+ * @brief Get field masteraddress from refresh_display message
  *
- * @return dummy data
+ * @return Master's address
  */
-static inline uint8_t mavlink_msg_refresh_display_get_dummy(const mavlink_message_t* msg)
+static inline uint16_t mavlink_msg_refresh_display_get_masteraddress(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint8_t(msg,  0);
+	return _MAV_RETURN_uint16_t(msg,  0);
+}
+
+/**
+ * @brief Get field slaveraddress from refresh_display message
+ *
+ * @return Slaver's address
+ */
+static inline uint16_t mavlink_msg_refresh_display_get_slaveraddress(const mavlink_message_t* msg)
+{
+	return _MAV_RETURN_uint16_t(msg,  2);
 }
 
 /**
@@ -137,8 +158,9 @@ static inline uint8_t mavlink_msg_refresh_display_get_dummy(const mavlink_messag
 static inline void mavlink_msg_refresh_display_decode(const mavlink_message_t* msg, mavlink_refresh_display_t* refresh_display)
 {
 #if MAVLINK_NEED_BYTE_SWAP
-	refresh_display->dummy = mavlink_msg_refresh_display_get_dummy(msg);
+	refresh_display->masteraddress = mavlink_msg_refresh_display_get_masteraddress(msg);
+	refresh_display->slaveraddress = mavlink_msg_refresh_display_get_slaveraddress(msg);
 #else
-	memcpy(refresh_display, _MAV_PAYLOAD(msg), 1);
+	memcpy(refresh_display, _MAV_PAYLOAD(msg), 4);
 #endif
 }
