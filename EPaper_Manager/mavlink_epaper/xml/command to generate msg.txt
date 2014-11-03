@@ -1,0 +1,1 @@
+cd C:\pymavlink_master\generator>mavgen.py --lang=C --wire-protocol=1.0 --output=output_directory xml_file_directory

@@ -1,0 +1,143 @@
+<?xml version='1.0'?>
+<mavlink>
+     <include>common.xml</include>
+     <enums>	
+		  <enum name="COLOR_ENUM">
+		  		<entry value="1" name="BLACK">
+					<description/>
+				</entry>
+		  		<entry value="2" name="DARKGRAY">
+					<description/>
+				</entry>
+				<entry value="3" name="LIGHTGRAY">
+					<description/>
+				</entry>
+				<entry value="4" name="WHITE">
+					<description/>
+				</entry>
+		  </enum>		 
+		  <enum name="FONT_ENUM">
+		  		<entry value="1" name="FONT8">
+					<description/>
+				</entry>
+		  		<entry value="2" name="FONT12">
+					<description/>
+				</entry>
+				<entry value="3" name="FONT16">
+					<description/>
+				</entry>
+				<entry value="4" name="FONT20">
+					<description/>
+				</entry>
+		  </enum>	
+		  <enum name="MODE_ENUM">
+		  		<entry value="1" name="CENTER">
+					<description/>
+				</entry>
+		  		<entry value="2" name="RIGHT">
+					<description/>
+				</entry>
+				<entry value="3" name="LEFT">
+					<description/>
+				</entry>
+		  </enum>	
+		  <enum name="STATUS_ENUM">
+		  		<entry value="1" name="MISSION_ERROR">
+					<description/>
+				</entry>
+				<entry value="2" name="MISSION_OK">
+					<description/>
+				</entry>
+		  </enum>
+		  <enum name="COMMAND_ENUM">
+		  		<entry value="0" name="NONE">
+					<description/>
+				</entry>
+				<entry value="1" name="DISPLAY_STRING">
+					<description/>
+				</entry>
+				<entry value="2" name="DRAW_HLINE">
+					<description/>
+				</entry>
+		  		<entry value="3" name="DRAW_VLINE">
+					<description/>
+				</entry>
+				<entry value="4" name="DRAW_RECT">
+					<description/>
+				</entry>
+				<entry value="5" name="DRAW_FILL_RECT">
+					<description/>
+				</entry>
+				<entry value="6" name="DRAW_IMAGE">
+					<description/>
+				</entry>
+				<entry value="7" name="REFRESH_DISPLAY">
+					<description/>
+				</entry>
+				<entry value="8" name="CLEAR_DISPLAY">
+					<description/>
+				</entry>
+				<entry value="9" name="SET_FONT">
+					<description/>
+				</entry>
+		  </enum>		  
+     </enums>  
+	 
+     <messages>	 
+	 	  <message id="4" name="DISPLAY_STRING">
+               <description>Displays characters on the EPD</description>
+               <field type="uint16_t" name="xpos">X position</field>	
+			   <field type="uint16_t" name="ypos">Y position</field>
+			   <field type="uint8_t" name="mode">display mode</field>	
+			   <field type="uint8_t" name="datalength">string data length in package</field>			   
+               <field type="uint8_t[240]" name="text">string data</field>	 	
+          </message>
+		  <message id="5" name="DRAW_HLINE">
+               <description>Draw a Horizontal Line</description>
+               <field type="uint16_t" name="xpos">X position</field>	
+			   <field type="uint16_t" name="ypos">Y position</field>	
+               <field type="uint16_t" name="length">line length</field>	 			   
+          </message>	 
+		  <message id="6" name="DRAW_VLINE">
+               <description>Draw a Vertical Line</description>
+               <field type="uint16_t" name="xpos">X position</field>	
+			   <field type="uint16_t" name="ypos">Y position</field>	
+               <field type="uint16_t" name="length">line length</field>	 			   
+          </message>
+		  <message id="7" name="DRAW_RECT">
+               <description>Draws a Rectangle</description>
+               <field type="uint16_t" name="xpos">X position</field>	
+			   <field type="uint16_t" name="ypos">Y position</field>	
+               <field type="uint16_t" name="height">rectangle height</field>
+			   <field type="uint16_t" name="width">rectangle width</field>			   
+          </message>
+		  <message id="8" name="DRAW_FILL_RECT">
+               <description>Draws a full rectangle</description>
+               <field type="uint16_t" name="xpos">X position</field>	
+			   <field type="uint16_t" name="ypos">Y position</field>	
+               <field type="uint16_t" name="height">rectangle height</field>
+			   <field type="uint16_t" name="width">rectangle width</field>			   
+          </message>
+		  <message id="9" name="DRAW_IMAGE">
+               <description>Draws an Image</description>
+               <field type="uint16_t" name="xpos">X position in the EPD</field>	
+			   <field type="uint16_t" name="ypos">Y position in the EPD</field>	
+			   <field type="uint16_t" name="xsize">X size in the EPD</field>	
+			   <field type="uint16_t" name="ysize">Y size in the EPD</field>	
+			   <field type="uint8_t" name="datalength">image data length in package</field>				   
+               <field type="uint8_t[240]" name="data">image data</field>		   
+          </message>
+		  <message id="10" name="REFRESH_DISPLAY">
+               <description>Updates the display from the data located into the RAM</description>
+               <field type="uint8_t" name="dummy">dummy data</field>				   
+          </message>
+		  <message id="11" name="CLEAR_DISPLAY">
+               <description>Clears the hole EPD</description>
+               <field type="uint16_t" name="color">color of the background</field>				   
+          </message>
+		  <message id="12" name="SET_FONT">
+               <description>Sets the Text Font</description>
+               <field type="uint8_t" name="font">specifies the layer font to be used</field>				   
+          </message>		  
+     </messages>
+</mavlink>
